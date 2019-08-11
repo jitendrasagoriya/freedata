@@ -1,5 +1,7 @@
 package com.jitendra.list.endpoint;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +40,17 @@ public class CityEndpoint {
 	@GetMapping("")
 	public ResponseEntity<?> get(){
 		try {
-			return new ResponseEntity<List<City>>(service.repository().findAll(), HttpStatus.OK);
+			List<City> cites = service.repository().findAll();
+			if(cites!=null) {
+				Collections.sort(cites, new Comparator<City>() {
+					@Override
+					public int compare(City o1, City o2) {
+						// TODO Auto-generated method stub
+						return o1.getName().compareTo(o2.getName());
+					}
+				});
+			}
+			return new ResponseEntity<List<City>>(cites, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Exception>(e, HttpStatus.INTERNAL_SERVER_ERROR);
@@ -48,7 +60,17 @@ public class CityEndpoint {
 	@GetMapping("state/{code}")
 	public ResponseEntity<?> getByState(@PathVariable String code){
 		try {
-			return new ResponseEntity<List<City>>(service.repository().getCityByState(code), HttpStatus.OK);
+			List<City> cites = service.repository().getCityByState(code);
+			if(cites!=null) {
+				Collections.sort(cites, new Comparator<City>() {
+					@Override
+					public int compare(City o1, City o2) {
+						// TODO Auto-generated method stub
+						return o1.getName().compareTo(o2.getName());
+					}
+				});
+			}
+			return new ResponseEntity<List<City>>(cites, HttpStatus.OK);
 		} catch (Exception e) {
 			e.printStackTrace();
 			return new ResponseEntity<Exception>(e, HttpStatus.INTERNAL_SERVER_ERROR);
